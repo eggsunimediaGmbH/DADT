@@ -6,8 +6,9 @@
     "serve": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "zipDest": "bestzip build.zip dist/*",
-    "web-ext": "web-ext run -s ./dist -t chromium"
+    "web-ext": "web-ext run -s ./dist -t chromium",
+    "gen-license-file": "generate-license-file --input package.json --output 3rd-party-licenses.txt --eol posix",
+    "check-licenses": "license-checker"
   },
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
