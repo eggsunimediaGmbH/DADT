@@ -1,0 +1,20 @@
+window.addEventListener("message", function(event) {
+  // Only accept messages from the same frame
+  if (event.source !== window) {
+    return;
+  }
+
+  var message = event.data;
+
+  // Only accept messages that we know are ours
+  if (
+    typeof message !== "object" ||
+    message === null ||
+    !message.source === "deniz-aem-tools" ||
+    message.source === undefined
+  ) {
+    return;
+  }
+
+  chrome.runtime.sendMessage(message);
+});

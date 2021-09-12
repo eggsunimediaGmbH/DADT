@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <% if (NODE_ENV === 'development') { %>
+    <!-- Load Vue Devtools remote ONLY in development -->
+    <script async src="http://localhost:8098"></script>
+    <% } %>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <style>
+    body {
+      margin: 0;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: var(--surface-a);
+      font-family: var(--font-family);
+      font-weight: 400;
+      color: var(--text-color);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+</html>
