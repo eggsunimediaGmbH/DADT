@@ -18,7 +18,7 @@ createApp(App)
 
 // dev tool setup
 chrome.devtools.panels.create(
-  "Deniz AEM Tools",
+  "DADT",
   null,
   "devtools.html",
   (panel) => {
