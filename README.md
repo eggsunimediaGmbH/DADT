@@ -5,7 +5,7 @@ A alternative to [AEM Chrome Plug-in](https://chrome.google.com/webstore/detail/
 
 
 [![SWAG](https://img.shields.io/badge/100%25-SWAG-orange)](https://img.shields.io/badge/100%25-SWAG-orange) 
-[![Build Status](https://***REMOVED***/api/badges/root/aem-dev-tools/status.svg)](https://***REMOVED***/root/aem-dev-tools)
+[![Build Status](https://***REMOVED***/api/badges/deniz/DADT/status.svg)](https://***REMOVED***/deniz/DADT)
 
 ## Installation
 
