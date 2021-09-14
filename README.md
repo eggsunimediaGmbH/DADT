@@ -9,7 +9,7 @@ A alternative to [AEM Chrome Plug-in](https://chrome.google.com/webstore/detail/
 
 ## Installation
 
-Download the production zip from the release tab. And add the extracted folder as unpack extension into chrome.
+Download the production zip (aem-dev-tools-{version}-production.zip) from the release tab. And add the extracted folder as unpacked extension into chrome.
 
 ![Install Help](https://***REMOVED***/Hori4/VAsibeyI32.gif/raw)
 
