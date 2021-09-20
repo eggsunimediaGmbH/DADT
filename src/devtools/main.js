@@ -17,12 +17,12 @@ createApp(App)
   .mount("#app");
 
 // dev tool setup
+// @ts-ignore
 chrome.devtools.panels.create(
   "DADT",
   null,
   "devtools.html",
   (panel) => {
     console.log(panel);
-    console.log(chrome);
   }
 );

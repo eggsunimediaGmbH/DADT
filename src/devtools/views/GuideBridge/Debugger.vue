@@ -187,19 +187,43 @@ export default {
   },
   created() {},
   mounted() {
-    chromeEvalPromise(`
-      guidelib.runtime.guide.rootPanel.jsonModel
-    `)
-      .then((data) => {
-        this.guideRootPanel = data;
-        this.createTreeFromGuideRootPanelRecursive(
-          this.guideRootPanel,
-          this.nodes
-        );
-      })
-      .catch((error) => console.error(error));
+    this.setupData();
+    chrome.devtools.network.onNavigated.addListener((requesturl) => {
+      setTimeout(() => {
+        this.setupData();
+      }, 1000);
+      console.log(requesturl);
+    });
   },
   methods: {
+    setupData() {
+      this.nodes = [];
+      chromeEvalPromise(`
+      guidelib.runtime.guide.rootPanel.jsonModel
+    `)
+        .then((data) => {
+          this.guideRootPanel = data;
+          this.createTreeFromGuideRootPanelRecursive(
+            this.guideRootPanel,
+            this.nodes
+          );
+        })
+        .catch((error) => {
+          this.nodes = [
+            {
+              key: 0,
+              data: {
+                label: "No GuideBridge",
+                id: 0,
+                resource: "",
+                visible: undefined,
+                scripts: [],
+              },
+            },
+          ];
+          console.error(error);
+        });
+    },
     getIcon(slotProps) {
       const resource = slotProps.node.data.resource;
 
@@ -218,9 +242,11 @@ export default {
       }
     },
     getAllScriptNames(slotProps) {
-      return slotProps.node.data.scripts.map((e) => {
-        return Object.getOwnPropertyNames(e)[0];
-      }).join(', ');
+      return slotProps.node.data.scripts
+        .map((e) => {
+          return Object.getOwnPropertyNames(e)[0];
+        })
+        .join(", ");
     },
     runExp(compId, scriptName) {
       chromeEvalPromise(executeScript(compId, scriptName));

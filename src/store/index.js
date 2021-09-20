@@ -6,11 +6,15 @@ export default createStore({
   state() {
     return {
       scale: 16,
+      dataLayerExpression: "dataLayer",
     };
   },
   mutations: {
     setScale(state, value) {
       state.scale = value;
+    },
+    setDataLayerExpression(state, value) {
+      state.dataLayerExpression = value;
     },
   },
   actions: {},
