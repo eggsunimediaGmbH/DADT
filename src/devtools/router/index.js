@@ -43,9 +43,29 @@ const routes = [
   },
   {
     path: "/DataLayer",
-    name: "DataLayer",
+    name: "Index",
     component: () =>
-      import(/* webpackChunkName: "DataLayer" */ "../views/DataLayer.vue"),
+      import(
+        /* webpackChunkName: "DataLayer" */ "../views/DataLayer/Index.vue"
+      ),
+    children: [
+      {
+        name: "DataLayerView",
+        path: "DataLayerView",
+        component: () =>
+          import(
+            /* webpackChunkName: "GuideState" */ "../views/DataLayer/DataLayer.vue"
+          ),
+      },
+      {
+        name: "DataLayerSettings",
+        path: "DataLayerSettings",
+        component: () =>
+          import(
+            /* webpackChunkName: "GuideState" */ "../views/DataLayer/Settings.vue"
+          ),
+      },
+    ],
   },
   {
     path: "/Terminal",

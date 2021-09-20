@@ -5,7 +5,7 @@
 <script>
 import * as JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
 import "jsoneditor/dist/jsoneditor.min.css";
-import { chromeEvalPromise } from "../helper";
+import { chromeEvalPromise } from "../../helper";
 
 export default {
   data() {
@@ -23,7 +23,7 @@ export default {
   created() {
     this.inter = setInterval(async () => {
       chromeEvalPromise(
-        "digital?.tracking?.getInstance(dataLayer)?.pageTrackingArr || dataLayer"
+        this.$store.state.dataLayerExpression
       )
         .then((data) => {
           this.editor.update(data.pages);
