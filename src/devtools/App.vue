@@ -88,7 +88,7 @@ export default {
     });
 
     const goToRepo = () => {
-      window.open("https://git.legendary-drop.de/root/aem-dev-tools");
+      window.open("https://git.legendary-drop.de/deniz/aem-dev-tools");
     };
 
     return { items, activeIndex, scale, goToRepo };
