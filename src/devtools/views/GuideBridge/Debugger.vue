@@ -43,7 +43,13 @@
       </Toolbar>
     </template>
 
-    <Column field="label" header="Name" :expander="true"> </Column>
+    <Column field="label" header="Name" :expander="true">
+      <template #body="slotProps">
+        <span :title="slotProps.node.data.label">
+          {{ cutLongString(slotProps.node.data.label) }}
+        </span>
+      </template>
+    </Column>
 
     <Column field="resource" header="Sling Resource">
       <template #body="slotProps">
@@ -51,11 +57,16 @@
         {{ slotProps.node.data.resource }}
       </template>
     </Column>
-    <Column headerStyle="width: 10em" field="scripts.length" header="Scripts">
+    <Column headerStyle="width: 1.5em" field="scripts.length" header="Scripts">
       <template #body="slotProps">
-        <div>
+        <div
+          v-if="slotProps.node.data.scripts.length > 0"
+          v-tooltip.bottom="getAllScriptNames(slotProps)"
+        >
           {{ slotProps.node.data.scripts.length }}
-          {{ getAllScriptNames(slotProps) }}
+        </div>
+        <div v-else>
+          0
         </div>
       </template>
     </Column>
@@ -63,6 +74,7 @@
       headerStyle="width: 10em"
       headerClass="p-text-center"
       bodyClass="p-text-center"
+      frozen
     >
       <template #header> </template>
       <template #body="slotProps">
@@ -106,6 +118,7 @@
     :showHeader="false"
     :width="'100vh'"
     v-model:visible="display"
+    style="max-width: 90%;"
     @show="updateSelectedCode(selectedNode.scripts[0])"
   >
     <TabView @tab-change="onTabViewChange">
@@ -196,6 +209,15 @@ export default {
     });
   },
   methods: {
+    cutLongString(str) {
+      if (typeof str != "string") {
+        return str;
+      }
+      if (str.length > 27) {
+        return str.slice(0, 27) + "...";
+      }
+      return str;
+    },
     setupData() {
       this.nodes = [];
       chromeEvalPromise(`
