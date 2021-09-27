@@ -77,8 +77,8 @@ export default {
       chromeEvalPromise(`
         const url = new URL(window.location.href);
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('logConfig', '${logLevel}');
         urlParams.set('wcmmode', 'disabled')
+        urlParams.set('logConfig', '${logLevel}');
         url.search = urlParams
 
         window.location.href = url

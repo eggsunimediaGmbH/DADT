@@ -24,6 +24,7 @@ import Card from "primevue/card";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
 
 import { ref } from "vue";
 import { useStore } from "vuex";
@@ -38,9 +39,15 @@ export default {
   setup() {
     const store = useStore();
     const value = ref(store.state.dataLayerExpression);
+    const toast = useToast();
 
     const save = () => {
       store.commit("setDataLayerExpression", value);
+      toast.add({
+        severity: "success",
+        summary: "DataLayerExpression was saved!",
+        life: 3000,
+      });
     };
 
     return { value, save };

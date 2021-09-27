@@ -359,4 +359,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.p-treetable.p-treetable-sm .p-treetable-tbody > tr > td {
+  padding: 0.1rem 0.1rem;
+}
+</style>
