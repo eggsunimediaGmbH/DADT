@@ -1,3 +1,10 @@
+## [next] - tda
+### Added
+
+### Fixed
+
+### Changed
+ - changed classes based on primeflex migration guide https://www.primefaces.org/primeflex/migration
 ## [0.2.1] - 2021-09-28
 ### Added
 - 

@@ -6,7 +6,7 @@
           placeholder=""
           icon="pi pi-plus"
           type="Button"
-          class="p-mr-2"
+          class="mr-2"
           @click="scale++"
           v-tooltip="'Scale Up'"
         ></Button>
@@ -14,7 +14,7 @@
           placeholder=""
           icon="pi pi-circle-on"
           type="Button"
-          class="p-mr-2"
+          class="mr-2"
           @click="scale = 16"
           v-tooltip="'Scale Reset'"
         ></Button>
@@ -22,7 +22,7 @@
           placeholder=""
           icon="pi pi-minus"
           type="Button"
-          class="p-mr-2"
+          class="mr-2"
           @click="scale--"
           v-tooltip="'Scale Down'"
         ></Button>
@@ -30,7 +30,7 @@
           placeholder=""
           icon="pi pi-github"
           type="Button"
-          class="p-mr-2"
+          class="mr-2"
           @click="goToRepo()"
         ></Button>
       </template>
