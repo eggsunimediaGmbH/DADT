@@ -77,11 +77,11 @@ export default {
       chromeEvalPromise(`
         const url = new URL(window.location.href);
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('wcmmode', 'disabled')
+        urlParams.set('wcmmode', 'disabled');
         urlParams.set('logConfig', '${logLevel}');
-        url.search = urlParams
+        url.search = urlParams;
 
-        window.location.href = url
+        window.location.href = url;
       `);
     },
     setWcmmodeCookie() {

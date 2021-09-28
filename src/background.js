@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
-browser.browserAction.onClicked.addListener(function(tab) {
-  console.log("Hello from the background");
-  console.log(tab);
-});
+// todo: add overlay option panel
+// browser.browserAction.onClicked.addListener(function(tab) {
+//   console.log("Hello from the background");
+//   console.log(tab);
+// });
 
 // connection manager
 var connections = {};

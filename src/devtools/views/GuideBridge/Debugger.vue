@@ -205,7 +205,6 @@ export default {
       setTimeout(() => {
         this.setupData();
       }, 1000);
-      console.log(requesturl);
     });
   },
   methods: {

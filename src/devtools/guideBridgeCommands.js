@@ -54,7 +54,6 @@ const getGuideState = () => {
 
 const highlightNode = (compId) => {
   return /* javascript */ `
-  console.log(
     $([document.documentElement, document.body]).animate(
       {
         scrollTop: $("#${compId}").offset().top - window.innerHeight / 2,
@@ -64,8 +63,7 @@ const highlightNode = (compId) => {
     $("#${compId}").css("outline", "#f00 solid 2px"),
     setTimeout(() => {
       $("#${compId}").css("outline", "unset");
-    }, 6000)
-  );  
+    }, 6000) 
 `;
 };
 
