@@ -88,7 +88,7 @@ export default {
     });
 
     const goToRepo = () => {
-      window.open("https://git.legendary-drop.de/deniz/aem-dev-tools");
+      window.open("https://github.com/eggsunimediaGmbH/DADT");
     };
 
     return { items, activeIndex, scale, goToRepo };
