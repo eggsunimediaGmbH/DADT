@@ -1,5 +1,5 @@
 <template>
-  <Card class="p-m-2">
+  <Card class="m-2">
     <template #header> </template>
     <template #title>
       AF Debug Mode
@@ -33,7 +33,7 @@
       />
     </template>
   </Card>
-  <Card class="p-m-2">
+  <Card class="m-2">
     <template #header> </template>
     <template #title>
       Set a wcmmode disabled cookie

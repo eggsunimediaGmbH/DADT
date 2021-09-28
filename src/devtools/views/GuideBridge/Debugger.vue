@@ -11,20 +11,20 @@
         <template #left>
           <InputText
             v-model="filters1['global']"
-            class="p-mr-2"
+            class="mr-2"
             placeholder="Global Search"
             size="50"
           />
           <Button
             type="button"
-            class="p-mr-2"
+            class="mr-2"
             icon="pi pi-plus"
             label="Expand All"
             @click="expandAll"
           />
           <Button
             type="button"
-            class="p-mr-2"
+            class="mr-2"
             icon="pi pi-minus"
             label="Collapse All"
             @click="collapseAll"
@@ -34,7 +34,7 @@
         <template #right>
           <Checkbox
             name="nodesOnlyWith"
-            class="p-mr-2"
+            class="mr-2"
             value="nodesOnlyWith"
             v-model="nodesOnlyWith"
           />
@@ -72,8 +72,8 @@
     </Column>
     <Column
       headerStyle="width: 10em"
-      headerClass="p-text-center"
-      bodyClass="p-text-center"
+      headerClass="text-center"
+      bodyClass="text-center"
       frozen
     >
       <template #header> </template>
