@@ -201,7 +201,7 @@ export default {
   created() {},
   mounted() {
     this.setupData();
-    chrome.devtools.network.onNavigated.addListener((requesturl) => {
+    chrome.devtools.network.onNavigated.addListener(() => {
       setTimeout(() => {
         this.setupData();
       }, 1000);

@@ -75,6 +75,11 @@ export default {
       //   icon: "pi pi-fw pi-desktop",
       //   to: "/Terminal",
       // },
+      {
+        label: "CodeSnippits",
+        icon: "pi pi-fw pi-pencil",
+        to: "/CodeSnippets",
+      }
     ]);
     const activeIndex = ref(0);
     const scale = ref(store.state.scale);
