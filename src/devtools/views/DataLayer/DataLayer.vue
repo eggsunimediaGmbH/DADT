@@ -26,8 +26,8 @@ export default {
         this.$store.state.dataLayerExpression
       )
         .then((data) => {
-          this.editor.update(data.pages);
-          this.dataLayer = data.pages;
+          this.editor.update(data);
+          this.dataLayer = data;
         })
         .catch((error) => console.error(error));
     }, 200);
