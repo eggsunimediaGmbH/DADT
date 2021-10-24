@@ -1,7 +1,10 @@
+## [0.3.3] - 2021-10-24
+### Fixed
+ - themes are not loaded production version.
+ - some themes had problems with the snippet extension.
 ## [0.3.2] - 2021-10-24
 ### Fixed
  - github actions
-
 ## [0.3.0] - 2021-10-24
 ### Added
  - theme selector for light theme user.

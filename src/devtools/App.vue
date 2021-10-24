@@ -143,12 +143,11 @@ export default {
 
     // setup theme
     watch(selectedTheme, () => {
-      require(`primevue/resources/themes/${selectedTheme.value}/theme.css`);
       store.commit("setTheme", selectedTheme.value);
       window.location.reload();
     });
     onMounted(() => {
-      require(`primevue/resources/themes/${selectedTheme.value}/theme.css`);
+      import(`primevue/resources/themes/${selectedTheme.value}/theme.css`);
     });
     return { items, activeIndex, scale, goToRepo, themes, selectedTheme };
   },

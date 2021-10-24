@@ -1,5 +1,5 @@
 <template>
-  <Splitter class="fill-height">
+  <Splitter class="fill-height" :style="`top: ${topPosition}px`">
     <SplitterPanel :style="`height: ${scrollPanelHeight - 100}px`" :size="33">
       <Toolbar>
         <template #left>
@@ -72,6 +72,7 @@
       </ScrollPanel>
     </SplitterPanel>
   </Splitter>
+  <Toast> </Toast>
 </template>
 
 <script>
@@ -96,9 +97,12 @@ import Column from "primevue/column";
 import Toolbar from "primevue/toolbar";
 import Button from "primevue/button";
 import Panel from "primevue/panel";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
 
 export default {
   components: {
+    Toast,
     InputText,
     SplitterPanel,
     Splitter,
@@ -112,6 +116,8 @@ export default {
   },
   setup() {
     const store = useStore();
+    const toast = useToast();
+    const topPosition = ref();
     const splitterPanelRef = ref(null);
     const scrollPanelHeight = ref(100);
     const selectedSnippet = ref({});
@@ -140,14 +146,17 @@ export default {
 
     const onResize = () => {
       scrollPanelHeight.value = splitterPanelRef.value.$el.scrollHeight;
+      topPosition.value = document.querySelector("nav").clientHeight;
     };
 
     onMounted(() => {
       resizeObserver = new ResizeObserver(onResize);
       resizeObserver.observe(splitterPanelRef.value.$el);
+      resizeObserver.observe(document.querySelector("nav"));
     });
     onBeforeUnmount(() => {
       resizeObserver.unobserve(splitterPanelRef.value.$el);
+      resizeObserver.unobserve(document.querySelector("nav"));
     });
 
     const highlighter = (code) => {
@@ -156,6 +165,12 @@ export default {
 
     const runScript = () => {
       chromeEvalPromise(selectedSnippet.value.data);
+      toast.add({
+        severity: "success",
+        summary:
+          "Script was run! Check debug console. (Tip: if you don't see a console. Press ESC.)",
+        life: 3000,
+      });
     };
 
     const deleteSelected = () => {
@@ -168,6 +183,7 @@ export default {
     };
 
     return {
+      topPosition,
       highlighter,
       treeItems,
       addSnippet,
