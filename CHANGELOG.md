@@ -1,3 +1,7 @@
+## [0.3.3] - 2021-10-24
+### Fixed
+ - github actions
+
 ## [0.3.0] - 2021-10-24
 ### Added
  - theme selector for light theme user.
