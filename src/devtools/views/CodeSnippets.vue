@@ -1,34 +1,27 @@
 <template>
   <Splitter class="fill-height">
-    <SplitterPanel :style="`height: ${scrollPanelHeight - 200}px`" :size="33">
+    <SplitterPanel :style="`height: ${scrollPanelHeight - 100}px`" :size="33">
       <Toolbar>
         <template #left>
-          <Button
-            @click="addSnippet"
-            label="Add Snippet"
-            icon="pi pi-plus"
-            class="mr-2"
-          />
-          <Button
-            @click="upSnippet"
-            label="Up"
-            icon="pi pi-plus"
-            class="mr-2"
-          />
-          <Button
-            @click="downSnippet"
-            label="Down"
-            icon="pi pi-plus"
-            class="mr-2"
-          />
+          <Button @click="addSnippet" icon="pi pi-plus" class="mr-2" />
+          <div class="fluid flex-grow-1">
+            <InputText
+              v-model="filters1['global'].value"
+              class="mr-2"
+              placeholder="Global Search"
+              style="width: 100%"
+            />
+          </div>
         </template>
       </Toolbar>
       <DataTable
-        :value="treeItems"
         responsiveLayout="scroll"
-        v-model:selection="selectedSnippet"
         selectionMode="single"
-        :scrollHeight="`${scrollPanelHeight-90}px`"
+        :value="treeItems"
+        v-model:selection="selectedSnippet"
+        v-model:filters="filters1"
+        :scrollable="true"
+        :scrollHeight="`${scrollPanelHeight - 75}px`"
       >
         <Column field="label" header="Name"></Column>
       </DataTable>
@@ -39,22 +32,43 @@
           <Button
             @click="runScript"
             label="Run"
-            icon="pi pi-plus"
+            icon="pi pi-play"
             class="mr-2"
+            :disabled="selectedSnippet.data == undefined"
           />
-          <Button label="Delete" icon="pi pi-upload" class="p-button-success" />
+          <Button
+            @click="deleteSelected"
+            label="Delete"
+            icon="pi pi-trash"
+            class="p-button-danger"
+            :disabled="selectedSnippet.data == undefined"
+          />
         </template>
       </Toolbar>
       <ScrollPanel
         class="custom"
         :style="`height: ${scrollPanelHeight - 100}px`"
       >
-        <prism-editor
-          class="my-editor"
-          v-model="code"
-          :highlight="highlighter"
-          line-numbers
-        ></prism-editor>
+        <Panel
+          v-if="selectedSnippet.data != undefined"
+          class="m-1"
+          style="width: 100%"
+        >
+          <template #header>
+            <InputText
+              v-model="selectedSnippet.label"
+              class=""
+              placeholder="Snippet Name"
+              style="width: 100%"
+            />
+          </template>
+          <prism-editor
+            class="my-editor"
+            v-model="selectedSnippet.data"
+            :highlight="highlighter"
+            line-numbers
+          ></prism-editor>
+        </Panel>
       </ScrollPanel>
     </SplitterPanel>
   </Splitter>
@@ -69,18 +83,23 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism-tomorrow.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { useStore } from "vuex";
 import { chromeEvalPromise } from "../helper";
 
+import InputText from "primevue/inputtext";
 import Splitter from "primevue/splitter";
 import SplitterPanel from "primevue/splitterpanel";
 import ScrollPanel from "primevue/scrollpanel";
 import DataTable from "primevue/datatable";
+import { FilterMatchMode } from "primevue/api";
 import Column from "primevue/column";
 import Toolbar from "primevue/toolbar";
 import Button from "primevue/button";
+import Panel from "primevue/panel";
 
 export default {
   components: {
+    InputText,
     SplitterPanel,
     Splitter,
     DataTable,
@@ -89,47 +108,33 @@ export default {
     Button,
     PrismEditor,
     ScrollPanel,
+    Panel,
   },
   setup() {
-    const code = ref("console.log('test');");
+    const store = useStore();
     const splitterPanelRef = ref(null);
     const scrollPanelHeight = ref(100);
     const selectedSnippet = ref({});
     const cutSnippet = ref(null);
-    var resizeObserver;
-    const treeItems = ref([
-      {
-        key: "0",
-        label: "root",
-        data: { folder: true },
-        icon: "pi pi-fw pi-inbox",
-      },
-      {
-        key: "1",
-        label: "Test",
-        data: "console.log('test')",
-        icon: "pi pi-fw pi-inbox",
-        children: [],
-      },
-      {
-        key: "2",
-        label: "Test",
-        data: "console.log('tes111t')",
-        icon: "pi pi-fw pi-inbox",
-      },
-    ]);
-
-    watch(selectedSnippet, (snippet) => {
-      if (typeof snippet.data === "string") {
-        code.value = snippet.data;
-      }
+    const filters1 = ref({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     });
+    var resizeObserver;
+    const treeItems = ref(store.state.codeSnippets);
+
+    watch(
+      treeItems,
+      () => {
+        store.commit("setCodeSnippets", treeItems.value);
+      },
+      { deep: true }
+    );
 
     const addSnippet = () => {
       treeItems.value.push({
         key: Date.now().toString(),
-        label: "Test2",
-        data: "console.log('test111')",
+        label: "New Snippet",
+        data: "// Your custom code here! \n// Have fun :D",
       });
     };
 
@@ -138,7 +143,6 @@ export default {
     };
 
     onMounted(() => {
-      console.log(splitterPanelRef.value);
       resizeObserver = new ResizeObserver(onResize);
       resizeObserver.observe(splitterPanelRef.value.$el);
     });
@@ -151,19 +155,19 @@ export default {
     };
 
     const runScript = () => {
-      console.log(code.value);
-      chromeEvalPromise(code.value);
+      chromeEvalPromise(selectedSnippet.value.data);
     };
 
-    const onNodeSelect = (node) => {
-      console.log(node);
-      if (node.data?.folder !== true) {
-        code.value = node.data;
-      }
+    const deleteSelected = () => {
+      const nodeToPop = treeItems.value.find((node) => {
+        return node.key === selectedSnippet.value.key;
+      });
+      const nodeToPopIndex = treeItems.value.indexOf(nodeToPop);
+      treeItems.value.splice(nodeToPopIndex, 1);
+      selectedSnippet.value = {};
     };
 
     return {
-      code,
       highlighter,
       treeItems,
       addSnippet,
@@ -171,14 +175,19 @@ export default {
       scrollPanelHeight,
       runScript,
       selectedSnippet,
-      onNodeSelect,
       cutSnippet,
+      filters1,
+      deleteSelected,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
+::v-deep(.p-toolbar-group-left) {
+  width: 100%;
+}
+
 .fill-height {
   position: absolute;
   top: 3.6rem;
@@ -186,16 +195,8 @@ export default {
   left: 0;
   bottom: 5px;
 }
-.p-treenode-label {
-  width: 90%;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-}
 
-.p-treenode-label > div {
-  width: 100%;
-  height: 100%;
-  line-height: 2rem;
+.my-editor {
+  height: unset;
 }
 </style>

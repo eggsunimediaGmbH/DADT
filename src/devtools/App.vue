@@ -2,6 +2,11 @@
   <nav>
     <Menubar :model="items">
       <template #end>
+        <Dropdown
+          v-model="selectedTheme"
+          :options="themes"
+          class="mr-2"
+        ></Dropdown>
         <Button
           placeholder=""
           icon="pi pi-plus"
@@ -43,22 +48,62 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { useStore } from "vuex";
 import Menubar from "primevue/menubar";
 import Button from "primevue/button";
+import Dropdown from "primevue/dropdown";
 import Tooltip from "primevue/tooltip";
 
 export default {
   components: {
     Menubar,
     Button,
+    Dropdown,
   },
   directives: {
     tooltip: Tooltip,
   },
   setup() {
     const store = useStore();
+    const selectedTheme = ref(store.state.selectedTheme);
+    const themes = ref([
+      "arya-green",
+      "tailwind-light",
+      "arya-blue",
+      "arya-orange",
+      "arya-purple",
+      "bootstrap4-dark-blue",
+      "bootstrap4-dark-purple",
+      "bootstrap4-light-blue",
+      "bootstrap4-light-purple",
+      "fluent-light",
+      "luna-amber",
+      "luna-blue",
+      "luna-green",
+      "luna-pink",
+      "md-dark-deeppurple",
+      "md-light-deeppurple",
+      "md-dark-indigo",
+      "md-light-indigo",
+      "mdc-dark-deeppurple",
+      "mdc-light-deeppurple",
+      "mdc-dark-indigo",
+      "mdc-light-indigo",
+      "nova",
+      "nova-accent",
+      "nova-alt",
+      "nova-vue",
+      "rhea",
+      "saga-blue",
+      "saga-green",
+      "saga-orange",
+      "saga-purple",
+      "vela-blue",
+      "vela-green",
+      "vela-orange",
+      "vela-purple",
+    ]);
     const items = ref([
       {
         label: "GuideBridge",
@@ -76,10 +121,10 @@ export default {
       //   to: "/Terminal",
       // },
       {
-        label: "CodeSnippits",
-        icon: "pi pi-fw pi-pencil",
+        label: "CodeSnippets",
+        icon: "pi pi-fw pi-bookmark",
         to: "/CodeSnippets",
-      }
+      },
     ]);
     const activeIndex = ref(0);
     const scale = ref(store.state.scale);
@@ -96,7 +141,16 @@ export default {
       window.open("https://github.com/eggsunimediaGmbH/DADT");
     };
 
-    return { items, activeIndex, scale, goToRepo };
+    // setup theme
+    watch(selectedTheme, () => {
+      require(`primevue/resources/themes/${selectedTheme.value}/theme.css`);
+      store.commit("setTheme", selectedTheme.value);
+      window.location.reload();
+    });
+    onMounted(() => {
+      require(`primevue/resources/themes/${selectedTheme.value}/theme.css`);
+    });
+    return { items, activeIndex, scale, goToRepo, themes, selectedTheme };
   },
 };
 </script>

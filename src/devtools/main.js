@@ -4,7 +4,7 @@ import ToastService from "primevue/toastservice";
 import App from "./App.vue";
 import router from "./router";
 import store from "../store";
-import "primevue/resources/themes/arya-green/theme.css";
+
 import "primevue/resources/primevue.min.css";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";

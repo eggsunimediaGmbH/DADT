@@ -7,6 +7,8 @@ export default createStore({
     return {
       scale: 16,
       dataLayerExpression: "dataLayer",
+      codeSnippets: [],
+      selectedTheme: "arya-green",
     };
   },
   mutations: {
@@ -16,6 +18,12 @@ export default createStore({
     setDataLayerExpression(state, value) {
       state.dataLayerExpression = value;
     },
+    setCodeSnippets(state, value) {
+      state.codeSnippets = value;
+    },
+    setTheme(state, value) {
+      state.selectedTheme = value;
+    }
   },
   actions: {},
   modules: {},
