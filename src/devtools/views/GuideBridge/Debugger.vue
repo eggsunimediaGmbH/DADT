@@ -71,7 +71,7 @@
       </template>
     </Column>
     <Column
-      headerStyle="width: 10em"
+      headerStyle="width: 12em"
       headerClass="text-center"
       bodyClass="text-center"
       frozen
@@ -84,6 +84,17 @@
           style="margin-right: .5em"
           @click="focusNode(slotProps.node.data)"
           v-tooltip.left="'Scroll to node and highlight it!'"
+        ></Button>
+        <Button
+          type="button"
+          icon="pi pi-info"
+          class="p-button-warning"
+          style="margin-right: .5em"
+          @click="
+            displayInfo = !displayInfo;
+            selectedNode = slotProps.node.data;
+          "
+          v-tooltip.left="'Open info panel!'"
         ></Button>
         <template v-if="slotProps.node.data.visible !== undefined">
           <Button
@@ -141,23 +152,44 @@
       </Button>
     </template>
   </Dialog>
+  <Dialog
+    :showHeader="false"
+    :width="'100vh'"
+    v-model:visible="displayInfo"
+    style="max-width: 90%;"
+  >
+    <ul class="list-none p-0 m-0">
+        <li v-for="fullState in interFromFullState(selectedNode.fullState)"
+            :key="fullState"
+            class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+            <div class="text-500 w-6 md:w-4 font-medium">{{fullState[0]}}</div>
+            <div class="text-900 w-full md:w-6 md:flex-order-0 flex-order-1">{{fullState[1]}}</div>
+        </li>
+    </ul>
+
+    <template #footer>
+      <Button class="p-button-danger" @click="displayInfo = !displayInfo">
+        Close
+      </Button>
+    </template>
+  </Dialog>
 </template>
 
 <script>
-import TreeTable from "primevue/treetable";
-import Column from "primevue/column";
-import Button from "primevue/button";
-import InputText from "primevue/inputtext";
-import Dialog from "primevue/dialog";
-import TabView from "primevue/tabview";
-import TabPanel from "primevue/tabpanel";
-import Checkbox from "primevue/checkbox";
-import Toolbar from "primevue/toolbar";
-import Tooltip from "primevue/tooltip";
+import TreeTable from 'primevue/treetable'
+import Column from 'primevue/column'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Dialog from 'primevue/dialog'
+import TabView from 'primevue/tabview'
+import TabPanel from 'primevue/tabpanel'
+import Checkbox from 'primevue/checkbox'
+import Toolbar from 'primevue/toolbar'
+import Tooltip from 'primevue/tooltip'
 
-import CodePreview from "@/components/CodePreview";
-import { chromeEvalPromise } from "../../helper";
-import { executeScript, highlightNode } from "../../guideBridgeCommands";
+import CodePreview from '@/components/CodePreview'
+import { chromeEvalPromise } from '../../helper'
+import { executeScript, highlightNode } from '../../guideBridgeCommands'
 
 export default {
   components: {
@@ -178,155 +210,163 @@ export default {
   data() {
     return {
       display: false,
+      displayInfo: false,
       selectedNode: {},
-      selectedCode: "",
+      selectedCode: '',
       expandedKeys: {
-        "guideContainer-rootPanel__": true,
+        'guideContainer-rootPanel__': true,
       },
       filters1: {},
       nodes: [],
       guideRootPanel: {},
       nodesOnlyWith: false,
-    };
+    }
   },
   watch: {
     nodesOnlyWith(newValue) {
       if (newValue.length) {
-        this.filters1["scripts.length"] = "1";
+        this.filters1['scripts.length'] = '1'
       } else {
-        delete this.filters1["scripts.length"];
+        delete this.filters1['scripts.length']
       }
     },
   },
   created() {},
   mounted() {
-    this.setupData();
+    this.setupData()
     chrome.devtools.network.onNavigated.addListener(() => {
       setTimeout(() => {
-        this.setupData();
-      }, 1000);
-    });
+        this.setupData()
+      }, 1000)
+    })
   },
   methods: {
     cutLongString(str) {
-      if (typeof str != "string") {
-        return str;
+      if (typeof str != 'string') {
+        return str
       }
       if (str.length > 27) {
-        return str.slice(0, 27) + "...";
+        return str.slice(0, 27) + '...'
       }
-      return str;
+      return str
     },
     setupData() {
-      this.nodes = [];
+      this.nodes = []
       chromeEvalPromise(`
       guidelib.runtime.guide.rootPanel.jsonModel
     `)
         .then((data) => {
-          this.guideRootPanel = data;
+          this.guideRootPanel = data
           this.createTreeFromGuideRootPanelRecursive(
             this.guideRootPanel,
             this.nodes
-          );
+          )
         })
         .catch((error) => {
           this.nodes = [
             {
               key: 0,
               data: {
-                label: "No GuideBridge",
+                label: 'No GuideBridge',
                 id: 0,
-                resource: "",
+                resource: '',
                 visible: undefined,
                 scripts: [],
               },
             },
-          ];
-          console.error(error);
-        });
+          ]
+          console.error(error)
+        })
     },
     getIcon(slotProps) {
-      const resource = slotProps.node.data.resource;
+      const resource = slotProps.node.data.resource
 
       switch (resource) {
-        case "fd/af/components/rootPanel":
-          return "pi-folder";
-        case "fd/af/components/panel":
-          return "pi-folder-open";
-        case "fd/af/components/guidetextbox":
-          return "pi-align-justify";
-        case "fd/af/components/guidedropdownlist":
-          return "pi-sort-down";
+        case 'fd/af/components/rootPanel':
+          return 'pi-folder'
+        case 'fd/af/components/panel':
+          return 'pi-folder-open'
+        case 'fd/af/components/guidetextbox':
+          return 'pi-align-justify'
+        case 'fd/af/components/guidedropdownlist':
+          return 'pi-sort-down'
 
         default:
-          return "pi-question";
+          return 'pi-question'
       }
     },
     getAllScriptNames(slotProps) {
       return slotProps.node.data.scripts
         .map((e) => {
-          return Object.getOwnPropertyNames(e)[0];
+          return Object.getOwnPropertyNames(e)[0]
         })
-        .join(", ");
+        .join(', ')
     },
     runExp(compId, scriptName) {
-      chromeEvalPromise(executeScript(compId, scriptName));
+      chromeEvalPromise(executeScript(compId, scriptName))
     },
     expandAll() {
       for (let node of this.nodes) {
-        this.expandNode(node);
+        this.expandNode(node)
       }
 
-      this.expandedKeys = { ...this.expandedKeys };
+      this.expandedKeys = { ...this.expandedKeys }
     },
     collapseAll() {
-      this.expandedKeys = {};
+      this.expandedKeys = {}
     },
     expandNode(node) {
       if (node.children && node.children.length) {
-        this.expandedKeys[node.key] = true;
+        this.expandedKeys[node.key] = true
 
         for (let child of node.children) {
-          this.expandNode(child);
+          this.expandNode(child)
         }
       }
     },
     onTabViewChange(data) {
-      this.updateSelectedCode(this.selectedNode.scripts[data.index]);
+      this.updateSelectedCode(this.selectedNode.scripts[data.index])
     },
     getScriptName(obj) {
-      return Object.getOwnPropertyNames(obj)[0];
+      return Object.getOwnPropertyNames(obj)[0]
     },
     updateSelectedCode(code) {
-      this.selectedCode = code[this.getScriptName(code)];
+      this.selectedCode = code[this.getScriptName(code)]
     },
     focusNode(node) {
-      chromeEvalPromise(highlightNode(node.id));
+      chromeEvalPromise(highlightNode(node.id))
     },
     toggleVisibility(node) {
       chromeEvalPromise(`
       guideBridge._resolveId('${node.id}').visible = ${!node.visible};
 
       `).then(() => {
-        node.visible = !node.visible;
-      });
+        node.visible = !node.visible
+      })
     },
     createTreeFromGuideRootPanelRecursive(state, dataArray) {
       let keywords = [
-        "calcExp",
-        "validateExp",
-        "optionsExp",
-        "clickExp",
-        "navigationChangeExp",
-        "visibleExp",
-        "enabledExp",
-        "completionExp",
-      ];
+        'calcExp',
+        'validateExp',
+        'optionsExp',
+        'clickExp',
+        'navigationChangeExp',
+        'visibleExp',
+        'enabledExp',
+        'completionExp',
+      ]
 
-      let scripts = [];
+      let scripts = []
       for (let exp in state) {
         if (keywords.includes(exp)) {
-          scripts.push({ [exp]: state[exp] });
+          scripts.push({ [exp]: state[exp] })
+        }
+      }
+   
+      let fullState = {}
+      for (var prop in state) {
+        if (prop !== 'items') {
+          fullState[prop] = state[prop]
         }
       }
 
@@ -335,13 +375,14 @@ export default {
         data: {
           label: state.name,
           id: state.templateId,
-          resource: state["sling:resourceType"],
+          resource: state['sling:resourceType'],
           visible: state.visible,
+          fullState,
           scripts,
         },
         children: [],
-      };
-      dataArray.push(tmpObj);
+      }
+      dataArray.push(tmpObj)
 
       if (state.items) {
         for (let item in state.items) {
@@ -349,13 +390,24 @@ export default {
             this.createTreeFromGuideRootPanelRecursive(
               state.items[item],
               tmpObj.children
-            );
+            )
           }
         }
       }
     },
+    interFromFullState(fullState) {
+      const result = []
+      for (let state in fullState) {
+        if (typeof fullState[state] == 'string' ||
+            typeof fullState[state] == 'number' ||
+            typeof fullState[state] == 'boolean') {
+          result.push([state, fullState[state]])
+        }
+      }
+      return result
+    },
   },
-};
+}
 </script>
 
 <style>
