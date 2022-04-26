@@ -1,3 +1,6 @@
+## [0.4.0] - 2022-04-26
+## Added
+ - info icon for guide debugger
 ## [0.3.3] - 2021-10-24
 ### Fixed
  - themes are not loaded production version.
