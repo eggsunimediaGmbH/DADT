@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
-    "core-js": "^3.18.3",
+    "core-js": "^3.22.3",
     "i": "^0.3.7",
     "js-beautify": "^1.14.0",
     "jsoneditor": "^9.5.6",
