@@ -43,7 +43,7 @@
     "eslint-plugin-vue": "^7.20.0",
     "generate-license-file": "^1.2.0",
     "license-checker": "^25.0.1",
-    "sass": "^1.43.2",
+    "sass": "^1.54.2",
     "sass-loader": "^12.2.0",
     "vue-cli-plugin-browser-extension": "^0.25.2"
   },
